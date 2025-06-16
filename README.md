@@ -11,3 +11,70 @@ To keep the pace lively and add an extra layer of excitement, each turn is timed
 Track your progress and bragging rights with the built-in scoreboard, which keeps a running tally of games won by each player or the AI agent. Whether you dominate the leaderboard or engage in friendly competition, the scoreboard adds a competitive edge that keeps you coming back for more.
 
 Dive into this modern take on a timeless game and experience the perfect blend of strategy, speed, and smart AI competition. Get ready to make your mark on the 6x6 grid and prove who truly masters the art of four in a row!
+
+
+---
+
+## Getting Started
+
+1. Clone the repository:
+
+   ```bash
+   git clone git@github.com:centx842/FourStraightBoardGame.git
+   cd FourStraightBoardGame
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
+
+3. Install the required dependencies:
+
+   ```bash#Getting Started:
+
+git clone git@github.com:centx842/FourStraightBoardGame.git
+
+cd FourStraightBoardGame
+
+python -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+export PYTHONPATH=$PYTHONPATH:/home/jahangir/projects/FourStraightBoardGame
+
+
+## Testing:
+
+pytest tests/test_tictactoe.py
+
+
+4. Set the `PYTHONPATH` environment variable:
+
+   ```bash
+   export PYTHONPATH="$PYTHONPATH:/home/jahangir/projects/FourStraightBoardGame"
+   ```
+
+---
+
+## Running Application
+
+```bash
+python Resources/TicTacToe_Agent.py
+```
+
+---
+
+
+## Running Tests
+
+Execute the test suite using `pytest`:
+
+```bash
+pytest tests/test_tictactoe.py
+```
+
