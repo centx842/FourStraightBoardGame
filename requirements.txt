@@ -1,8 +1,10 @@
+pygame
 numpy 
-stable-baselines3 
-torch 
-gymnasium 
-gym 
-pandas 
-numpy 
-matplotlib
+pytest
+flake8
+# stable-baselines3 
+# torch 
+# gymnasium 
+# gym 
+# pandas  
+# matplotlib
