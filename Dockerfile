@@ -12,3 +12,4 @@ WORKDIR /app
 COPY . /app
 
 RUN pyinstaller --onefile --noconsole --icon=Resources/game.png --name=tictactoe Resources/TicTacToe_Agent.py
+
