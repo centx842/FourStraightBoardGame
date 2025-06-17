@@ -1,10 +1,10 @@
 name: TicTacToe Release
 
 on:
-  workflow_run:
-    workflows: ["TicTacToe Build"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["TicTacToe Build"]
+  #   types:
+  #     - completed
 
   workflow_dispatch:  # Enables manual triggering from GitHub UI
 
