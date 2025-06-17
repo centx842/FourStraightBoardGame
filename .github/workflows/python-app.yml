@@ -42,11 +42,17 @@ jobs:
       run: |
         PYTHONPATH=. pytest
         
-    - name: Build executable with PyInstaller
+    # - name: Build executable with PyInstaller
+    #   run: |
+    #     pip install pyinstaller
+    #     pyinstaller --onefile --noconsole --icon=Resources/game.png --name=tictactoe Resources/TicTacToe_Agent.py
+
+    - name: Build PyInstaller binary in Docker (Ubuntu 20.04)
       run: |
-        pip install pyinstaller
-        pyinstaller --onefile --noconsole --icon=Resources/game.png --name=tictactoe Resources/TicTacToe_Agent.py
-        
+        docker build -t tictactoe-builder .
+        docker create --name extract-builder tictactoe-builder
+        docker cp extract-builder:/app/dist/tictactoe ./tictactoe
+        docker rm extract-builder        
     - name: Upload executable as artifact
       uses: actions/upload-artifact@v4
       with:
