@@ -1,59 +1,44 @@
 # Tic-Tac-Toe Reimagined
 
-Welcome to the exciting world of Tic-Tac-Toe Reimagined — a fresh and engaging twist on the classic game you know and love! This isn’t your ordinary tic-tac-toe; instead of the traditional 3x3 grid, get ready to challenge your strategic skills on a spacious 6x6 board. The objective? Align four of your marks in a row — horizontally, vertically, or diagonally — to claim victory and outsmart your opponent.
+**Tic-Tac-Toe Reimagined** offers a modern and strategic evolution of the classic game. Moving beyond the traditional 3x3 format, this version challenges players on a more expansive 6x6 grid, where the objective is to align four of your marks — horizontally, vertically, or diagonally — to achieve victory.
 
-To add even more variety and customization to your gameplay experience, the board size is flexible! You can choose to play on a 5x5, 6x6, or even a massive 10x10 grid. Each board size brings its own unique challenges and strategies, allowing you to tailor the game to your preferred level of complexity and excitement. Whether you want a quick, intense match or a longer, more strategic battle, the choice is yours.
+To enhance the gameplay experience, the board size is configurable. Choose between 5x5, 6x6, or an extensive 10x10 grid to match your preferred level of difficulty and game duration. Each configuration introduces new dynamics and strategic considerations, ensuring a fresh challenge every time you play.
 
-Whether you’re a solo player craving a worthy challenge or looking to enjoy a friendly duel, this game has you covered. You can test your wits against an intelligent PPO (Proximal Policy Optimization) Agent, designed to learn and adapt, offering a dynamic and thrilling gameplay experience. Or, if you prefer the classic human rivalry, invite a friend and battle head-to-head in a race of quick thinking and tactical moves.
+This game supports both single-player and two-player modes. Compete against a friend in head-to-head gameplay, or test your strategy against an intelligent PPO (Proximal Policy Optimization) Agent. The AI adapts and learns from experience, providing a stimulating and unpredictable opponent.
 
-To keep the pace lively and add an extra layer of excitement, each turn is timed. This timer ensures that every decision counts, pushing players to think fast and act decisively. No more stalling or endless pondering — just pure, fast-paced fun!
+To maintain a fast-paced environment, each move is time-bound. The built-in turn timer encourages swift decision-making, eliminating delays and promoting an engaging, energetic flow of play.
 
-Track your progress and bragging rights with the built-in scoreboard, which keeps a running tally of games won by each player or the AI agent. Whether you dominate the leaderboard or engage in friendly competition, the scoreboard adds a competitive edge that keeps you coming back for more.
+A scoreboard tracks victories for both human players and the AI agent, adding a competitive element and motivating continuous improvement. Whether you're aiming to climb the leaderboard or simply enjoy a casual match, Tic-Tac-Toe Reimagined delivers a compelling mix of strategy, speed, and skill.
 
-Dive into this modern take on a timeless game and experience the perfect blend of strategy, speed, and smart AI competition. Get ready to make your mark on the 6x6 grid and prove who truly masters the art of four in a row!
-
+Embrace this innovative twist on a timeless favorite and prove your mastery in the game of four in a row.
 
 ---
 
 ## Getting Started
 
-1. Clone the repository:
+1. **Clone the repository**:
 
    ```bash
    git clone git@github.com:centx842/FourStraightBoardGame.git
    cd FourStraightBoardGame
    ```
 
-2. Create and activate a virtual environment:
+2. **Set up a virtual environment**:
 
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    ```
 
-3. Install the required dependencies:
+3. **Install dependencies**:
 
-   ```bash#Getting Started:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-git clone git@github.com:centx842/FourStraightBoardGame.git
+4. **Set the `PYTHONPATH`**:
 
-cd FourStraightBoardGame
-
-python -m venv .venv
-
-source .venv/bin/activate
-
-pip install -r requirements.txt
-
-export PYTHONPATH=$PYTHONPATH:/home/jahangir/projects/FourStraightBoardGame
-
-
-## Testing:
-
-pytest tests/test_tictactoe.py
-
-
-4. Set the `PYTHONPATH` environment variable:
+   Update your environment variable to include the project directory:
 
    ```bash
    export PYTHONPATH="$PYTHONPATH:/home/jahangir/projects/FourStraightBoardGame"
@@ -61,7 +46,9 @@ pytest tests/test_tictactoe.py
 
 ---
 
-## Running Application
+## Running the Application
+
+Execute the main game loop:
 
 ```bash
 python Resources/TicTacToe_Agent.py
@@ -69,12 +56,12 @@ python Resources/TicTacToe_Agent.py
 
 ---
 
-
 ## Running Tests
 
-Execute the test suite using `pytest`:
+Use `pytest` to run the test suite:
 
 ```bash
 pytest tests/test_tictactoe.py
 ```
 
+---
