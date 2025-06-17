@@ -1,0 +1,49 @@
+name: TicTacToe Release
+
+on:
+  workflow_run:
+    workflows: ["TicTacToe Build"]
+    types:
+      - completed
+
+  workflow_dispatch:  # Enables manual triggering from GitHub UI
+
+jobs:
+  release:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to create a release and upload assets
+
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: tictactoe-executable
+        path: dist/
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ github.run_number }}
+        name: TicTacToe v${{ github.run_number }}
+        body: |
+          🎮 New release of TicTacToe executable.
+
+          **Changes**
+          - Built from commit `${{ github.sha }}`
+          - See build logs for full details.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Binary to Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/tictactoe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
