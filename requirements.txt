@@ -2,6 +2,7 @@ pygame
 numpy 
 pytest
 flake8
+pyinstaller
 # stable-baselines3 
 # torch 
 # gymnasium 
