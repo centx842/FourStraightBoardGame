@@ -22,6 +22,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: tictactoe-executable
+        artifact-ids: 3344618807
         path: dist/
 
     - name: Create Release
