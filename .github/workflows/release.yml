@@ -22,7 +22,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: tictactoe-executable
-        github-token: ${{ secrets.GH_PAT }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         # artifact-ids: 3344618807
         path: dist/
 
