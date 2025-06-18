@@ -54,22 +54,26 @@ jobs:
         # artifact-ids: 3344618807
         path: distribution/
 
-    - name: Create Release and Upload Binary
-      # id: create_release
-      uses: softprops/action-gh-release@v2
-      with:
-        # tag_name: v${{ github.run_number }}
-        tag_name: v20  # Use static tag or adjust to dynamic if needed
-        # name: TicTacToe v${{ github.run_number }}
-        name: TicTacToe v20
-        body: |
-          🎮 New release of TicTacToe executable.
+    # - name: Create Release and Upload Binary
+    #   # id: create_release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     # tag_name: v${{ github.run_number }}
+    #     tag_name: v20  # Use static tag or adjust to dynamic if needed
+    #     # name: TicTacToe v${{ github.run_number }}
+    #     name: TicTacToe v20
+    #     body: |
+    #       🎮 New release of TicTacToe executable.
 
-          **Changes**
-          - Built from commit `${{ github.sha }}`
-          - See build logs for full details.
-        draft: false
-        prerelease: false
-        files: distribution/tictactoe
-        token: ${{ secrets.RELEASE_TOKEN }}
+    #       **Changes**
+    #       - Built from commit `${{ github.sha }}`
+    #       - See build logs for full details.
+    #     draft: false
+    #     prerelease: false
+    #     files: distribution/tictactoe
+    #     token: ${{ secrets.RELEASE_TOKEN }}
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag'
 
