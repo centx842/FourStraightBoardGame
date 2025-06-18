@@ -9,8 +9,8 @@ on:
   workflow_dispatch:  # Enables manual triggering from GitHub UI
 
 permissions:
-  contents: read
-  actions: write  # For artifact upload
+  contents: write  # Required for creating releases and tags
+  actions: write   # For artifact upload
 
 jobs:
   build:
@@ -54,12 +54,14 @@ jobs:
         # artifact-ids: 3344618807
         path: distibution/
 
-    - name: Create Release
-      id: create_release
+    - name: Create Release and Upload Binary
+      # id: create_release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v${{ github.run_number }}
-        name: TicTacToe v${{ github.run_number }}
+        # tag_name: v${{ github.run_number }}
+        tag_name: v20  # Use static tag or adjust to dynamic if needed
+        # name: TicTacToe v${{ github.run_number }}
+        name: TicTacToe v20
         body: |
           🎮 New release of TicTacToe executable.
 
@@ -68,12 +70,6 @@ jobs:
           - See build logs for full details.
         draft: false
         prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        files: distribution/tictactoe
+        token: ${{ secrets.RELEASE_TOKEN }}
 
-    - name: Upload Binary to Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: dist/tictactoe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
