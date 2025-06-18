@@ -76,5 +76,7 @@ jobs:
     - name: Release New
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: v20
         files: distribution/tictactoe-executable
+        github-token: ${{ secrets.GITHUB_TOKEN }}
 
