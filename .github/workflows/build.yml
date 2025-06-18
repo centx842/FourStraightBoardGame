@@ -52,7 +52,7 @@ jobs:
         name: tictactoe-executable
         # github-token: ${{ secrets.GITHUB_TOKEN }}
         # artifact-ids: 3344618807
-        path: distibution/
+        path: distribution/
 
     - name: Create Release and Upload Binary
       # id: create_release
