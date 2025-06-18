@@ -73,7 +73,8 @@ jobs:
     #     files: distribution/tictactoe
     #     token: ${{ secrets.RELEASE_TOKEN }}
 
-    - name: Release
+    - name: Release New
       uses: softprops/action-gh-release@v2
-      if: github.ref_type == 'tag'
+      with:
+        files: distribution/tictactoe-executable
 
