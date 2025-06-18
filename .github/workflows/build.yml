@@ -78,5 +78,5 @@ jobs:
       with:
         tag_name: v20
         files: distribution/tictactoe-executable
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
 
