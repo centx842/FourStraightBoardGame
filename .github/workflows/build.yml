@@ -54,6 +54,15 @@ jobs:
         # artifact-ids: 3344618807
         path: distribution/
 
+    - name: List Directory Contents
+      run: ls -R distribution/
+      shell: bash
+    - name: Extract Artifact
+      run: |
+        cd distribution
+        unzip -o *.zip
+        ls -la
+      shell: bash
     # - name: Create Release and Upload Binary
     #   # id: create_release
     #   uses: softprops/action-gh-release@v2
