@@ -85,13 +85,15 @@ jobs:
     - name: Release New
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v1.0.1
-        files: distribution/tictactoe-executable
-        name: TicTacToe v1.0.1
+        # tag_name: v1.0.1
+        tag_name: ${{ github.ref_name }}
+        files: distribution/tictactoe
+        # name: TicTacToe v1.0.1
+        name: TicTacToe ${{ github.ref_name }}
         draft: false
         prerelease: false
         body: |
-          🎮 New release of TicTacToe executable.
+          🎮 New release of TicTacToe.
 
           **Changes**
           - Built from commit `${{ github.sha }}`
