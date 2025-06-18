@@ -73,10 +73,16 @@ jobs:
     #     files: distribution/tictactoe
     #     token: ${{ secrets.RELEASE_TOKEN }}
 
-    - name: Release New
+    - name: Create Release and Upload Binary
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v20
+        tag_name: v21
         files: distribution/tictactoe-executable
-        # github-token: ${{ secrets.GITHUB_TOKEN }}
+        name: TicTacToe v21
+        body: |
+          🎮 New release of TicTacToe executable.
+
+          **Changes**
+          - Built from commit `${{ github.sha }}`
+          - See build logs for full details.
 
