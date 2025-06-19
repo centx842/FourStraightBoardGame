@@ -41,7 +41,7 @@ Embrace this innovative twist on a timeless favorite and prove your mastery in t
    Update your environment variable to include the project directory:
 
    ```bash
-   export PYTHONPATH="$PYTHONPATH:/home/jahangir/projects/FourStraightBoardGame"
+   export PYTHONPATH="$PYTHONPATH:/home/<user>/FourStraightBoardGame"
    ```
 
 ---
