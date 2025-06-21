@@ -40,6 +40,7 @@ class Players():
     def reset_player(self):
         self.player = 1
 
+
 class Tiles():
     def __init__(self, win):
         self.win = win
@@ -207,6 +208,7 @@ class Tiles():
         print(board)
 
         return open_list, board
+
 
 class TicTacToe():
     
