@@ -11,9 +11,9 @@ tests/__pycache__/
 Resources/__pycache__/
 
 # Ignore editor/IDE-specific files
-.vscode/
 .idea/
 *.swp
+temp_auto_push.bat
 *.swo
 
 # Ignore OS-specific files
@@ -28,4 +28,5 @@ htmlcov/
 
 # Build files
 build 
-dist
+dist.gitignore
+branch_structure.json
