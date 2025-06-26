@@ -37,18 +37,21 @@ class Tiles():
         self.p2_color = (0, 0, 255)  # Blue
         self.tile_clicked = [False for _ in range(rows * cols)]
 
-    def draw_circle(self, row, col, color):
+
+    def draw_circle(self, screen, row, col, color):
         center = (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2)
         radius = SQUARE_SIZE // 3
-        pg.draw.circle(self.screen, color, center, radius)
+        pg.draw.circle(screen, color, center, radius)
 
-    def draw_cross(self, row, col, color):
+
+    def draw_cross(self, screen, row, col, color):
         start_pos1 = (col * SQUARE_SIZE + SQUARE_SIZE // 4, row * SQUARE_SIZE + SQUARE_SIZE // 4)
         end_pos1 = (col * SQUARE_SIZE + 3 * SQUARE_SIZE // 4, row * SQUARE_SIZE + 3 * SQUARE_SIZE // 4)
         start_pos2 = (col * SQUARE_SIZE + 3 * SQUARE_SIZE // 4, row * SQUARE_SIZE + SQUARE_SIZE // 4)
         end_pos2 = (col * SQUARE_SIZE + SQUARE_SIZE // 4, row * SQUARE_SIZE + 3 * SQUARE_SIZE // 4)
-        pg.draw.line(self.screen, color, start_pos1, end_pos1, LINE_WIDTH)
-        pg.draw.line(self.screen, color, start_pos2, end_pos2, LINE_WIDTH)
+        pg.draw.line(screen, color, start_pos1, end_pos1, LINE_WIDTH)
+        pg.draw.line(screen, color, start_pos2, end_pos2, LINE_WIDTH)
+
 
     
 # Class for Initializing the Game
@@ -57,6 +60,7 @@ class FourStraightGame(Tiles):
         super().__init__(ROWS, COLS)
         self.screen = screen
         self.board = [Player.NONE for _ in range(self.rows * self.cols)]
+        self.switch_cond = False
         self.draw_board()
 
 
@@ -80,28 +84,57 @@ class FourStraightGame(Tiles):
         if self.board[index] == Player.NONE:
             self.board[index] = player
             self.draw_tile(row, col, player)
-        #     if self.check_winner(player):
-        #         print(f"Player {player} wins!")
-        #         self.reset()
-        #     else:
-            player = self.switch_turns(player)
-            print(f"Turn: {player}")
+            print(f"Player {player.name} clicked on tile ({row}, {col})")
+            self.switch_cond = True
+            game_end =  self.check_winner()
+            if game_end:
+                print(f"Player {player} wins!")
+                pg.time.delay(2000)  # Pause for 2 seconds before resetting
+                self.reset()
+        else:
+            self.switch_cond = False
+            
 
     def draw_tile(self, row, col, player):
         if player == Player.P1:
-            self.draw_circle(row, col, self.p1_color)
+            self.draw_circle(self.screen, row, col, self.p1_color)
         elif player == Player.P2:
-            self.draw_cross(row, col, self.p2_color)
+            self.draw_cross(self.screen, row, col, self.p2_color)
     
+
     def switch_turns(self, current_player):
         if current_player == Player.P1:
             return Player.P2
         else:
             return Player.P1
 
+
+    def check_winner(self):
+        # # Check rows
+        # for row in range(self.rows):
+        #     if all(self.board[row * self.cols + col] == player for col in range(self.cols)):
+        #         return True
+
+        # # Check columns
+        # for col in range(self.cols):
+        #     if all(self.board[row * self.cols + col] == player for row in range(self.rows)):
+        #         return True
+
+        # # Check diagonals
+        # if all(self.board[i * self.cols + i] == player for i in range(self.rows)):
+        #     return True
+        # if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
+        #     return True
+
+        # return False
+        pass
+
+
     def reset(self):
         self.board = [Player.NONE for _ in range(self.rows * self.cols)]
+        self.switch_cond = False
         self.draw_board()
+
 
 
 def main():
@@ -136,8 +169,10 @@ def main():
                     pass
             elif event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
-                print(pos)
                 game.check_tiles(player, pos)
+                if game.switch_cond:
+                    player = game.switch_turns(player)
+                print(f"Turn: {player}")
 
         # Update Board and Screen    
         game.draw_board()
