@@ -9,15 +9,16 @@ import sys
 ROWS = 4
 COLS = 4
 WIDTH = 800
-HEIGHT = 800
+HEIGHT = 900
 BG_COLOR = (128,128,128)
 LINE_COLOR = (0,0,0)
 LINE_WIDTH = 10
+LINE_MARGIN = 12
 SQUARE_SIZE = WIDTH // ROWS
+MSG_FONT_SIZE = 30
 MSG_COLOR = (0,0,0)
-MSG_AREA = (WIDTH // 2, HEIGHT // 2)
-MSG_FONT_SIZE = 74
-MSG_COORDS = (MSG_AREA[0] // 2, MSG_AREA[1] // 2)
+MSG_AREA = (WIDTH - 100, HEIGHT - 100)
+MSG_COORDS = (WIDTH // 2, 50)
 FPS = 60
 
 
@@ -68,22 +69,23 @@ class FourStraightGame(Tiles):
         self.screen.fill(BG_COLOR)
 
         # NOTE: One line drawn down the column and second across the column.
+        pg.draw.line(self.screen, LINE_COLOR, (0, 100), (WIDTH, 100) , LINE_MARGIN)
+        pg.draw.line(self.screen, LINE_COLOR, (0, HEIGHT), (WIDTH, HEIGHT) , LINE_MARGIN)
         for row in range(1, self.rows):
-            pg.draw.line(self.screen, LINE_COLOR, (0, row * SQUARE_SIZE), (WIDTH, row * SQUARE_SIZE) , LINE_WIDTH)
+            pg.draw.line(self.screen, LINE_COLOR, (0, row * SQUARE_SIZE + 100), (WIDTH, row * SQUARE_SIZE + 100) , LINE_WIDTH)
                 
         for col in range(1, self.cols):
-            pg.draw.line(self.screen, LINE_COLOR, (col * SQUARE_SIZE, 0), (col * SQUARE_SIZE, HEIGHT), LINE_WIDTH)
+            pg.draw.line(self.screen, LINE_COLOR, (col * SQUARE_SIZE,  + 100), (col * SQUARE_SIZE, HEIGHT + 100), LINE_WIDTH)
 
 
     def check_tiles(self, player, pos):
-        col = pos[0] // SQUARE_SIZE
+        col = pos[0] // SQUARE_SIZE 
         row = pos[1] // SQUARE_SIZE
         index = row * self.cols + col
 
         #If this tile is not clicked, then mark it based on the player.
         if self.board[index] == Player.NONE:
             self.board[index] = player
-            self.draw_tile(row, col, player)
             print(f"Player {player.name} clicked on tile ({row}, {col})")
             self.switch_cond = True
             game_end =  self.check_winner()
@@ -91,16 +93,23 @@ class FourStraightGame(Tiles):
                 print(f"Player {player} wins!")
                 pg.time.delay(2000)  # Pause for 2 seconds before resetting
                 self.reset()
+        elif all(self.board[i] != Player.NONE for i in range(self.rows * self.cols)):
+            print("It's a draw! No more moves left.")
+            pg.time.delay(2000)  # Pause for 2 seconds before resetting
+            self.reset()
         else:
             self.switch_cond = False
-            
 
-    def draw_tile(self, row, col, player):
-        if player == Player.P1:
-            self.draw_circle(self.screen, row, col, self.p1_color)
-        elif player == Player.P2:
-            self.draw_cross(self.screen, row, col, self.p2_color)
-    
+
+    def draw_current_XOs(self):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                index = row * self.cols + col
+                if self.board[index] == Player.P1:
+                    self.draw_circle(self.screen, row, col, self.p1_color)
+                elif self.board[index] == Player.P2:
+                    self.draw_cross(self.screen, row, col, self.p2_color)
+
 
     def switch_turns(self, current_player):
         if current_player == Player.P1:
@@ -130,6 +139,24 @@ class FourStraightGame(Tiles):
         pass
 
 
+    def update_scoreboard(self, p1, p2):
+        # font = pg.font.Font(None, MSG_FONT_SIZE)
+        # msg_template = f"SCOREBOARD --- P1: {player1_score} | P2: {player2_score}"
+        # text = font.render(msg_template, True, MSG_COLOR)
+        # text_rect = text.get_rect(center=MSG_COORDS)
+        # self.screen.blit(text, text_rect)
+        pass
+
+
+    def draw_scoreboard(self):
+        font = pg.font.Font(None, MSG_FONT_SIZE)
+        msg_template = f"SCOREBOARD --- P1: {0} | P2: {0}"
+
+        text = font.render(msg_template, True, MSG_COLOR)
+        text_rect = text.get_rect(center = MSG_COORDS)
+        self.screen.blit(text, text_rect)
+    
+    
     def reset(self):
         self.board = [Player.NONE for _ in range(self.rows * self.cols)]
         self.switch_cond = False
@@ -174,8 +201,12 @@ def main():
                     player = game.switch_turns(player)
                 print(f"Turn: {player}")
 
-        # Update Board and Screen    
-        game.draw_board()
+        # Draw Function
+        game.draw_board()           # Update Board and Screen    
+        game.draw_scoreboard()      # Draw player turn text
+        game.draw_current_XOs()     # Update the display    
+        
+        # Update the display
         pg.display.flip()
         pg.time.delay(int(1000/FPS))
     
