@@ -1,8 +1,7 @@
-#ML Libraries...
+# Game Libraries...
 import pygame as pg
 import numpy as np
 from enum import Enum
-import sys
 
 
 # Board Appearence
@@ -17,7 +16,7 @@ LINE_MARGIN = 12
 SQUARE_SIZE = WIDTH // ROWS
 MSG_FONT_SIZE = 30
 MSG_COLOR = (0,0,0)
-MSG_AREA = (WIDTH - 100, HEIGHT - 100)
+MSG_AREA = (WIDTH - 100, 100)
 MSG_COORDS = (WIDTH // 2, 50)
 FPS = 60
 
@@ -39,22 +38,21 @@ class Tiles():
         self.tile_clicked = [False for _ in range(rows * cols)]
 
 
-    def draw_circle(self, screen, row, col, color):
-        center = (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2)
+    def draw_circle(self, surface, row, col, color):
+        center = ((col * SQUARE_SIZE) + (SQUARE_SIZE // 2), (row * SQUARE_SIZE) + (SQUARE_SIZE // 2))
         radius = SQUARE_SIZE // 3
-        pg.draw.circle(screen, color, center, radius)
+        pg.draw.circle(surface, color, center, radius)
 
 
-    def draw_cross(self, screen, row, col, color):
-        start_pos1 = (col * SQUARE_SIZE + SQUARE_SIZE // 4, row * SQUARE_SIZE + SQUARE_SIZE // 4)
-        end_pos1 = (col * SQUARE_SIZE + 3 * SQUARE_SIZE // 4, row * SQUARE_SIZE + 3 * SQUARE_SIZE // 4)
-        start_pos2 = (col * SQUARE_SIZE + 3 * SQUARE_SIZE // 4, row * SQUARE_SIZE + SQUARE_SIZE // 4)
-        end_pos2 = (col * SQUARE_SIZE + SQUARE_SIZE // 4, row * SQUARE_SIZE + 3 * SQUARE_SIZE // 4)
-        pg.draw.line(screen, color, start_pos1, end_pos1, LINE_WIDTH)
-        pg.draw.line(screen, color, start_pos2, end_pos2, LINE_WIDTH)
+    def draw_cross(self, surface, row, col, color):
+        start_pos1 = ((col * SQUARE_SIZE) + (SQUARE_SIZE // 4), (row * SQUARE_SIZE) + (SQUARE_SIZE // 4))
+        end_pos1 = ((col * SQUARE_SIZE) + (3 * SQUARE_SIZE // 4), (row * SQUARE_SIZE) + (3 * SQUARE_SIZE // 4))
+        start_pos2 = ((col * SQUARE_SIZE) + (3 * SQUARE_SIZE // 4), (row * SQUARE_SIZE) + (SQUARE_SIZE // 4))
+        end_pos2 = ((col * SQUARE_SIZE) + SQUARE_SIZE // 4, (row * SQUARE_SIZE) + (3 * SQUARE_SIZE // 4))
+        pg.draw.line(surface, color, start_pos1, end_pos1, LINE_WIDTH)
+        pg.draw.line(surface, color, start_pos2, end_pos2, LINE_WIDTH)
 
 
-    
 # Class for Initializing the Game
 class FourStraightGame(Tiles):
     def __init__(self, screen):
@@ -62,43 +60,49 @@ class FourStraightGame(Tiles):
         self.screen = screen
         self.board = [Player.NONE for _ in range(self.rows * self.cols)]
         self.switch_cond = False
+        self.scoreboard_surface = pg.Surface((WIDTH, 100))
+        self.gameboard_surface = pg.Surface((WIDTH, 800))
         self.draw_board()
+        self.draw_scoreboard()
 
 
     def draw_board(self):
-        self.screen.fill(BG_COLOR)
 
-        # NOTE: One line drawn down the column and second across the column.
-        pg.draw.line(self.screen, LINE_COLOR, (0, 100), (WIDTH, 100) , LINE_MARGIN)
-        pg.draw.line(self.screen, LINE_COLOR, (0, HEIGHT), (WIDTH, HEIGHT) , LINE_MARGIN)
+        self.gameboard_surface.fill(BG_COLOR)
+        pg.draw.line(self.gameboard_surface, LINE_COLOR, (0, HEIGHT), (WIDTH, HEIGHT) , LINE_MARGIN)
+        
+        # NOTE: One line drawn down the row and second across the column.
         for row in range(1, self.rows):
-            pg.draw.line(self.screen, LINE_COLOR, (0, row * SQUARE_SIZE + 100), (WIDTH, row * SQUARE_SIZE + 100) , LINE_WIDTH)
+            pg.draw.line(self.gameboard_surface, LINE_COLOR, (0, (row * SQUARE_SIZE)), (WIDTH, (row * SQUARE_SIZE)) , LINE_WIDTH)
                 
         for col in range(1, self.cols):
-            pg.draw.line(self.screen, LINE_COLOR, (col * SQUARE_SIZE,  + 100), (col * SQUARE_SIZE, HEIGHT + 100), LINE_WIDTH)
+            pg.draw.line(self.gameboard_surface, LINE_COLOR, ((col * SQUARE_SIZE), 0), ((col * SQUARE_SIZE), HEIGHT), LINE_WIDTH)
 
 
     def check_tiles(self, player, pos):
-        col = pos[0] // SQUARE_SIZE 
-        row = pos[1] // SQUARE_SIZE
-        index = row * self.cols + col
+        
+        if pos[1] >= 100:
+            gameboard_pos = (pos[0], pos[1] - 100)
+            col = gameboard_pos[0] // SQUARE_SIZE
+            row = gameboard_pos[1] // SQUARE_SIZE
 
-        #If this tile is not clicked, then mark it based on the player.
-        if self.board[index] == Player.NONE:
-            self.board[index] = player
-            print(f"Player {player.name} clicked on tile ({row}, {col})")
-            self.switch_cond = True
-            game_end =  self.check_winner()
-            if game_end:
-                print(f"Player {player} wins!")
-                pg.time.delay(2000)  # Pause for 2 seconds before resetting
-                self.reset()
-        elif all(self.board[i] != Player.NONE for i in range(self.rows * self.cols)):
-            print("It's a draw! No more moves left.")
-            pg.time.delay(2000)  # Pause for 2 seconds before resetting
-            self.reset()
-        else:
-            self.switch_cond = False
+            if (0 <= row < self.rows) and (0 <= col < self.cols):
+                index = row * self.cols + col
+                if self.board[index] == Player.NONE:
+                    self.board[index] = player
+                    print(f"Player {player.name} clicked on tile ({row}, {col})")
+                    self.switch_cond = True
+                    game_end =  self.check_winner()
+                    if game_end:
+                        print(f"Player {player} wins!")
+                        pg.time.delay(2000)  # Pause for 2 seconds before resetting
+                        self.reset()
+                elif all(self.board[i] != Player.NONE for i in range(self.rows * self.cols)):
+                    print("It's a draw! No more moves left.")
+                    pg.time.delay(2000)  # Pause for 2 seconds before resetting
+                    self.reset()
+                else:
+                    self.switch_cond = False
 
 
     def draw_current_XOs(self):
@@ -106,9 +110,9 @@ class FourStraightGame(Tiles):
             for col in range(self.cols):
                 index = row * self.cols + col
                 if self.board[index] == Player.P1:
-                    self.draw_circle(self.screen, row, col, self.p1_color)
+                    self.draw_circle(self.gameboard_surface, row, col, self.p1_color)
                 elif self.board[index] == Player.P2:
-                    self.draw_cross(self.screen, row, col, self.p2_color)
+                    self.draw_cross(self.gameboard_surface, row, col, self.p2_color)
 
 
     def switch_turns(self, current_player):
@@ -135,8 +139,7 @@ class FourStraightGame(Tiles):
         # if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
         #     return True
 
-        # return False
-        pass
+        return False
 
 
     def update_scoreboard(self, p1, p2):
@@ -149,12 +152,15 @@ class FourStraightGame(Tiles):
 
 
     def draw_scoreboard(self):
+        self.scoreboard_surface.fill(BG_COLOR)
         font = pg.font.Font(None, MSG_FONT_SIZE)
         msg_template = f"SCOREBOARD --- P1: {0} | P2: {0}"
 
         text = font.render(msg_template, True, MSG_COLOR)
         text_rect = text.get_rect(center = MSG_COORDS)
-        self.screen.blit(text, text_rect)
+        self.scoreboard_surface.blit(text, text_rect)
+        pg.draw.line(self.scoreboard_surface, LINE_COLOR, (0, 0), (WIDTH, 0), LINE_MARGIN)
+        pg.draw.line(self.scoreboard_surface, LINE_COLOR, (0, 100), (WIDTH, 100), LINE_MARGIN)
     
     
     def reset(self):
@@ -173,15 +179,9 @@ def main():
     game = FourStraightGame(screen)
     running = True
 
-    # ADD: Randomly choose Player 1 and Player 2 and display on screen
+    # Randomly choose Player 1 and Player 2 and display on screen
     player = np.random.choice([Player.P1, Player.P2])
     print(f"Player {player} starts the game!")
-    
-    # Display text on screen
-    font = pg.font.Font(None, MSG_FONT_SIZE)
-    text = font.render(f"Turn: {player}", True, (0, 0, 0))
-    text_rect = text.get_rect(center=(100, 100))
-    screen.blit(text, text_rect)
     
     # Running Game Loop
     while(running):
@@ -189,11 +189,10 @@ def main():
             if event.type == pg.QUIT:
                 running = False
             elif event.type == pg.KEYDOWN:
-                if event.type == pg.K_q or event.type == pg.K_ESCAPE:
+                if event.key in (pg.K_q, pg.K_ESCAPE):
                     running = False
-                if event. type == pg.K_r:
+                if event.key == pg.K_r:
                     game.reset()
-                    pass
             elif event.type == pg.MOUSEBUTTONUP:
                 pos = pg.mouse.get_pos()
                 game.check_tiles(player, pos)
@@ -204,7 +203,9 @@ def main():
         # Draw Function
         game.draw_board()           # Update Board and Screen    
         game.draw_scoreboard()      # Draw player turn text
-        game.draw_current_XOs()     # Update the display    
+        game.draw_current_XOs()     # Update the display
+        screen.blit(game.scoreboard_surface, (0, 0))        # Draw Scoreboard Surface
+        screen.blit(game.gameboard_surface, (0, 100))       # Draw Gameboard Surface
         
         # Update the display
         pg.display.flip()
