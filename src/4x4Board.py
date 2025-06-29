@@ -62,6 +62,8 @@ class FourStraightGame(Tiles):
         self.switch_cond = False
         self.scoreboard_surface = pg.Surface((WIDTH, 100))
         self.gameboard_surface = pg.Surface((WIDTH, 800))
+        self.p1_wins = 0
+        self.p2_wins = 0
         self.draw_board()
         self.draw_scoreboard()
 
@@ -92,17 +94,21 @@ class FourStraightGame(Tiles):
                     self.board[index] = player
                     print(f"Player {player.name} clicked on tile ({row}, {col})")
                     self.switch_cond = True
-                    game_end =  self.check_winner()
+                    game_end, condition = self.check_winner(player)
                     if game_end:
                         print(f"Player {player} wins!")
+                        self.update_scoreboard()
+                        self.draw_winner(player, row, col, condition)
                         pg.time.delay(2000)  # Pause for 2 seconds before resetting
                         self.reset()
-                elif all(self.board[i] != Player.NONE for i in range(self.rows * self.cols)):
-                    print("It's a draw! No more moves left.")
-                    pg.time.delay(2000)  # Pause for 2 seconds before resetting
-                    self.reset()
                 else:
                     self.switch_cond = False
+
+        if all(self.board[i] != Player.NONE for i in range(self.rows * self.cols)):
+            print("It's a draw! No more moves left.")
+            pg.draw.circle(self.gameboard_surface, (128, 0, 0), (WIDTH // 2, HEIGHT // 2), 50, 5)
+            pg.time.delay(2000)  # Pause for 2 seconds before resetting
+            self.reset()
 
 
     def draw_current_XOs(self):
@@ -122,34 +128,60 @@ class FourStraightGame(Tiles):
             return Player.P1
 
 
-    def check_winner(self):
-        # # Check rows
-        # for row in range(self.rows):
-        #     if all(self.board[row * self.cols + col] == player for col in range(self.cols)):
-        #         return True
+    def check_winner(self, player):
+        
+        game_end = False
+        condition = 0
+        
+        # Check rows
+        for row in range(self.rows):
+            if all(self.board[row * self.cols + col] == player for col in range(self.cols)):
+                game_end = True
+                condition = 1
 
-        # # Check columns
-        # for col in range(self.cols):
-        #     if all(self.board[row * self.cols + col] == player for row in range(self.rows)):
-        #         return True
+        # Check columns
+        for col in range(self.cols):
+            if all(self.board[row * self.cols + col] == player for row in range(self.rows)):
+                game_end = True
+                condition = 2
 
-        # # Check diagonals
-        # if all(self.board[i * self.cols + i] == player for i in range(self.rows)):
-        #     return True
-        # if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
-        #     return True
-
-        return False
+        # Check diagonals
+        if all(self.board[i * self.cols + i] == player for i in range(self.rows)):
+            game_end = True
+            condition = 3
+        if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
+            game_end = True
+            condition = 4
+        
+        return game_end, condition
 
 
     def update_scoreboard(self, p1, p2):
         # font = pg.font.Font(None, MSG_FONT_SIZE)
-        # msg_template = f"SCOREBOARD --- P1: {player1_score} | P2: {player2_score}"
+        # msg_template = f"SCOREBOARD --- P1: {p1} | P2: {p2}"
         # text = font.render(msg_template, True, MSG_COLOR)
         # text_rect = text.get_rect(center=MSG_COORDS)
         # self.screen.blit(text, text_rect)
         pass
 
+
+    def draw_winner(self, player, row, col, condition):
+         
+        if player == Player.P1:
+            color = self.p1_color
+        else:
+            color = self.p2_color
+
+        if condition == 1:
+            pg.draw.line(self.gameboard_surface, color, (row * SQUARE_SIZE, 0), (row * SQUARE_SIZE, self.gameboard_surface.get_height()), 20)
+        elif condition == 2:
+            pg.draw.line(self.gameboard_surface, color, (0, col * SQUARE_SIZE), (row * SQUARE_SIZE, self.gameboard_surface.get_height()), 20)
+        elif condition == 3:
+            pg.draw.line(self.gameboard_surface, color, (0, 0), (self.gameboard_surface.get_width(), self.gameboard_surface.get_height()), 20)
+        elif condition == 4:
+            pg.draw.line(self.gameboard_surface, color, (0, self.gameboard_surface.get_height()), (self.gameboard_surface.get_width(), 0), 20)
+        else:
+            pass
 
     def draw_scoreboard(self):
         self.scoreboard_surface.fill(BG_COLOR)
