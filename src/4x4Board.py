@@ -17,7 +17,8 @@ SQUARE_SIZE = WIDTH // ROWS
 MSG_FONT_SIZE = 30
 MSG_COLOR = (0,0,0)
 MSG_AREA = (WIDTH - 100, 100)
-MSG_COORDS = (WIDTH // 2, 50)
+SCORE_MSG_COORDS = (WIDTH // 2, 50)
+STATUS_MSG_COORDS = (WIDTH // 2, 75)
 FPS = 60
 
 
@@ -66,6 +67,8 @@ class FourStraightGame(Tiles):
         self.p2_wins = 0
         self.win_condition = False
         self.draw_condition = False
+        self.current_player = None  # Track the current player
+        self.status_message = ""    # Display game status
         self.draw_board()
         self.draw_scoreboard()
 
@@ -86,11 +89,19 @@ class FourStraightGame(Tiles):
     def draw_scoreboard(self):
         self.scoreboard_surface.fill(BG_COLOR)
         font = pg.font.Font(None, MSG_FONT_SIZE)
-        msg_template = f"SCOREBOARD --- P1: {self.p1_wins} | P2: {self.p2_wins}"
+        
+        score_text = f"SCOREBOARD --- P1: {self.p1_wins} | P2: {self.p2_wins}"
+        status_text = self.status_message
 
-        text = font.render(msg_template, True, MSG_COLOR)
-        text_rect = text.get_rect(center = MSG_COORDS)
-        self.scoreboard_surface.blit(text, text_rect)
+        score_render = font.render(score_text, True, MSG_COLOR)
+        status_render = font.render(status_text, True, MSG_COLOR)
+
+        score_rect = score_render.get_rect(center = SCORE_MSG_COORDS)
+        status_rect = status_render.get_rect(center= STATUS_MSG_COORDS)       
+
+        self.scoreboard_surface.blit(score_render, score_rect)
+        self.scoreboard_surface.blit(status_render, status_rect)
+
         pg.draw.line(self.scoreboard_surface, LINE_COLOR, (0, 0), (WIDTH, 0), LINE_MARGIN)
         pg.draw.line(self.scoreboard_surface, LINE_COLOR, (0, 100), (WIDTH, 100), LINE_MARGIN)
 
@@ -113,32 +124,41 @@ class FourStraightGame(Tiles):
         else:
             color = self.p2_color
 
-        # Check the condition and draw the winner accordingly
+        # Check rows and draw horizontal line through center
         for row in range(self.rows):
             if all(self.board[row * self.cols + col] == player for col in range(self.cols)):
-                pg.draw.line(self.gameboard_surface, color, (row * SQUARE_SIZE, 0), (row * SQUARE_SIZE, self.gameboard_surface.get_height()), 20)
+                y = (row + 0.5) * SQUARE_SIZE
+                pg.draw.line(self.gameboard_surface, color, (0, y), (WIDTH, y), 20)
         
+        # Check columns and draw vertical line through center
         for col in range(self.cols):
             if all(self.board[row * self.cols + col] == player for row in range(self.rows)):
-                pg.draw.line(self.gameboard_surface, color, (0, col * SQUARE_SIZE), (row * SQUARE_SIZE, self.gameboard_surface.get_height()), 20)
+                x = (col + 0.5) * SQUARE_SIZE
+                pg.draw.line(self.gameboard_surface, color, (x, 0), (x, 800), 20)
         
+        # Main diagonal (top-left to bottom-right)
         if all(self.board[i * self.cols + i] == player for i in range(self.rows)):
-            pg.draw.line(self.gameboard_surface, color, (0, 0), (self.gameboard_surface.get_width(), self.gameboard_surface.get_height()), 20)
+            pg.draw.line(self.gameboard_surface, color, (0, 0), (WIDTH, 800), 20)
         
+        # Anti-diagonal (bottom-left to top-right)
         if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
-            pg.draw.line(self.gameboard_surface, color, (0, self.gameboard_surface.get_height()), (self.gameboard_surface.get_width(), 0), 20)
+            pg.draw.line(self.gameboard_surface, color, (0, 800), (WIDTH, 0), 20)
 
 
     def draw_tie_game(self, player):
+        
         #Set color for the winner
         if player == Player.P1:
             color = self.p1_color
         else:
             color = self.p2_color
 
-        print("It's a draw! No more moves left.")
-        pg.draw.circle(self.gameboard_surface, color, (WIDTH // 2, HEIGHT // 2), 50, 5)
-        pg.time.delay(2000)  # Pause for 2 seconds before resetting
+        pg.draw.circle(self.gameboard_surface, color, (WIDTH // 2, 400), 50, 5) 
+        self.draw_scoreboard()
+        self.screen.blit(self.scoreboard_surface, (0, 0))
+        self.screen.blit(self.gameboard_surface, (0, 100))
+        pg.display.flip()
+        pg.time.delay(2000)
         self.reset()
 
 
@@ -195,19 +215,21 @@ class FourStraightGame(Tiles):
         if game_end:
             print(f"Player {player.name} wins!")
             self.update_scoreboard(player)
+            self.status_message = f"Player {player.name} wins!"
             self.draw_winner(player)
+            self.draw_scoreboard()
+            self.screen.blit(self.scoreboard_surface, (0, 0))
+            self.screen.blit(self.gameboard_surface, (0, 100))
+            pg.display.flip()
             pg.time.delay(2000)  # Pause for 2 seconds before resetting
             self.reset()
 
 
     def update_scoreboard(self, player):
-        
         if player == Player.P1:
             self.p1_wins += 1
         elif player == Player.P2:
             self.p2_wins += 1
-        else:
-            pass
  
 
     def switch_turns(self, current_player):
@@ -222,6 +244,8 @@ class FourStraightGame(Tiles):
         self.switch_cond = False
         self.win_condition = False
         self.draw_condition = False
+        self.current_player = np.random.choice([Player.P1, Player.P2])
+        self.status_message = f"Player {self.current_player.name}'s turn"
         self.draw_board()
 
 
