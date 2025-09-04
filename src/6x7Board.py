@@ -191,29 +191,53 @@ class FourStraightGame(Tiles):
         game_end = False
         self.win_condition = False
         
-        # Check rows
+        # Check Horizontal (columns)
         for row in range(self.rows):
-            if all(self.board[row * self.cols + col] == player for col in range(self.cols)):
-                game_end = True
-                self.win_condition = True
-                break
+            for col in range(self.cols - 3):
+                cond1 = (self.board[row * self.cols + col] == player)
+                cond2 = (self.board[row * self.cols + (col + 1)] == player)
+                cond3 = (self.board[row * self.cols + (col + 2)] == player)
+                cond4 = (self.board[row * self.cols + (col + 3)] == player)
+                if cond1 and cond2 and cond3 and cond4:
+                    game_end = True
+                    self.win_condition = True
+                    break
 
-        # Check columns
-        for col in range(self.cols):
-            if all(self.board[row * self.cols + col] == player for row in range(self.rows)):
-                game_end = True
-                self.win_condition = True
-                break
+        # Check Vertical (rows)
+        for row in range(self.rows - 3):
+            for col in range(self.cols):
+                cond1 = (self.board[row * self.cols + col] == player)
+                cond2 = (self.board[(row + 1) * self.cols + col] == player)
+                cond3 = (self.board[(row + 2) * self.cols + col] == player)
+                cond4 = (self.board[(row + 3) * self.cols + col] == player)
+                if cond1 and cond2 and cond3 and cond4:
+                    game_end = True
+                    self.win_condition = True
+                    break
 
-        # Left to Right Diagonals
-        if all(self.board[i * self.cols + i] == player for i in range(self.rows)):
-            game_end = True
-            self.win_condition = True
+        # Check '\' Diagonals
+        for row in range(self.rows - 3):
+            for col in range(self.cols - 3):
+                cond1 = (self.board[row * self.cols + col] == player)
+                cond2 = (self.board[(row + 1) * self.cols + (col + 1)] == player)
+                cond3 = (self.board[(row + 2) * self.cols + (col + 2)] == player)
+                cond4 = (self.board[(row + 3) * self.cols + (col + 3)] == player)
+                if cond1 and cond2 and cond3 and cond4:
+                    game_end = True
+                    self.win_condition = True
+                    break
 
-        # Right to Left Diagonals
-        if all(self.board[(self.rows - 1 - i) * self.cols + i] == player for i in range(self.rows)):
-            game_end = True
-            self.win_condition = True
+        # Check '/' Diagonals
+        for row in range(self.rows - 3):
+            for col in range(3, self.cols):
+                cond1 = (self.board[row * self.cols + col] == player)
+                cond2 = (self.board[(row + 1) * self.cols + (col - 1)] == player)
+                cond3 = (self.board[(row + 2) * self.cols + (col - 2)] == player)
+                cond4 = (self.board[(row + 3) * self.cols + (col - 3)] == player)
+                if cond1 and cond2 and cond3 and cond4:
+                    game_end = True
+                    self.win_condition = True
+                    break
 
         if game_end:
             print(f"Player {player.name} wins!")
