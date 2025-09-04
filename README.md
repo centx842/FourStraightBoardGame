@@ -25,9 +25,18 @@ Embrace this innovative twist on a timeless favorite and prove your mastery in t
 
 2. **Set up a virtual environment**:
 
+#### On Windows: 
+   
    ```bash
    python -m venv .venv
    source .venv/bin/activate
+   ```
+
+#### On Linux:
+
+   ```bash
+   python3.10 -m venv FourInARow-Linux
+   source FourInARow-Linux/bin/activate
    ```
 
 3. **Install dependencies**:
@@ -51,7 +60,7 @@ Embrace this innovative twist on a timeless favorite and prove your mastery in t
 Execute the main game loop:
 
 ```bash
-python Resources/TicTacToe_Agent.py
+python3.10 src/6x7Board.py 
 ```
 
 ---
@@ -61,7 +70,7 @@ python Resources/TicTacToe_Agent.py
 Use `pytest` to run the test suite:
 
 ```bash
-pytest tests/test_tictactoe.py
+pytest tests/test_fourinarow.py
 ```
 
 ---
