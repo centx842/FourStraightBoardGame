@@ -1,0 +1,4 @@
+python3.10 -m venv FourInARow-Linux
+source FourInARow-Linux/bin/activate
+pip install -r requirements.txt
+python3.10 src/6x7Board.py 
