@@ -11,10 +11,10 @@ tests/__pycache__/
 Resources/__pycache__/
 
 # Ignore editor/IDE-specific files
-.vscode/
 .idea/
 *.swp
 *.swo
+temp_auto_push.bat
 
 # Ignore OS-specific files
 .DS_Store
@@ -29,3 +29,8 @@ htmlcov/
 # Build files
 build 
 dist
+
+# Ignore Python Environments
+/FourInARow/
+.gitignore
+branch_structure.json
