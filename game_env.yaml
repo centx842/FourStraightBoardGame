@@ -1,0 +1,15 @@
+game:
+  board_rows: 4
+  board_cols: 4
+  screen_width: 800
+  screen_height: 900
+  background_color: (128,128,128)  #HEXA as Gray
+  line_color: '(0,0,0)'            #HEXA as Black
+  line_width: 10
+  line_margin: 12
+  game_msg_font_size: 30
+  game_msg_color: (0,0,0)          #HEXA as Black
+  FPS: 60
+  Game_AI:
+    enabled: False
+    name: "Henry"

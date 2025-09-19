@@ -29,3 +29,6 @@ htmlcov/
 # Build files
 build 
 dist
+
+# Ignore Python Environments
+/FourInARow/
